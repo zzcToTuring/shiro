@@ -1,0 +1,30 @@
+-->demo文件
+1、配置maven文件
+    Shiro不依赖容器，直接创建maven工程即可， maven中创建基础配置依赖即可
+
+2、创建INI文件
+    shiro获取权限信息可通过数据库获取，也可以通过INI获取，demo案例了解ini方式即可
+    文件内容：
+    [users]
+    zhangsan=z3
+    lisi=l4
+
+3、shiro了解
+    3-1 从外部看shiro结构
+        Subject：应用代码直接交互的对象；对象可以是用户，也可以是爬虫、机器人
+        SecurityManager:安全管理器；所有安全相关操作均与此交互，管理所有subject(对象)
+        Realm：shiro从中获取安全数据(用户，角色，权限等信息)，可以理解成是一个数据源
+
+    3-2 从内部看shiro结构
+        subject：任何可以与应用交互的用户
+        SecurityManager：类似于springMVC中的拦截器，所有交互都由他管理
+        Realm：安全数据源，可以是文本或JDBC实现，需要有1个或多个Realm
+        SessionManager：管理session生命周期组件(shiro并不仅仅可以用于web环境，也可以在javaSE环境中)
+        CacheManager：缓存管理；管理如用户、角色、权限等信息的缓存
+        Cryptography：密码模块(加密，提升安全性)
+
+3、入门案例：com.shiro.demoTest1
+    过程：创建securityManager（默认拦截器）-->获取规则(安全数据源)-->
+        数据源添加到拦截器中--->拦截器添加到系统(环境中)-->
+        (从系统)获取subject-->(账号密码)获取token-->subject.login(token)判断
+
