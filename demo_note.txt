@@ -1,4 +1,4 @@
--->demo文件
+demo文件
 1、配置maven文件
     Shiro不依赖容器，直接创建maven工程即可， maven中创建基础配置依赖即可
 
@@ -16,7 +16,7 @@
         Realm：shiro从中获取安全数据(用户，角色，权限等信息)，可以理解成是一个数据源
 
     3-2 从内部看shiro结构
-        subject：任何可以与应用交互的用户
+        subject：任何可以与应用交互的用户【如subject.login(xxx) 登录】
         SecurityManager：类似于springMVC中的拦截器，所有交互都由他管理
         Realm：安全数据源，可以是文本或JDBC实现，需要有1个或多个Realm
         SessionManager：管理session生命周期组件(shiro并不仅仅可以用于web环境，也可以在javaSE环境中)
@@ -27,4 +27,33 @@
     过程：创建securityManager（默认拦截器）-->获取规则(安全数据源)-->
         数据源添加到拦截器中--->拦截器添加到系统(环境中)-->
         (从系统)获取subject-->(账号密码)获取token-->subject.login(token)判断
+
+4、分配角色、授权：com.shiro.demoTest2
+    在ini文件中，给用户分配好角色、该角色拥有的权限；给用户分配好角色，那么用户拥有该角色的权限
+    分配方式：
+        --if else方式
+            if(subject.hasRole("admin")){}else{}
+        --注解
+            @RequiresRoles("admin")
+            public void hello(){}
+        --JSP
+            <shiro:hasRole name="admin">
+            <!--有权限-->
+            </shiro:hasRole>
+    相关方法：
+        subject.checkXXX
+        subject.hasXXX
+
+
+5、加密：com.shiro.demoTest3
+    为了确保数据安全，数据一般以密文进行存储，shiro框架自带一些加密方式
+
+
+6、自定义Realm
+    shiro默认的登录方式是不带加密的，如果要带加密，需要自定义realM
+    使用ini格式无论从配置、书写、理解都较为麻烦，且实际用处不大，因此省略
+    视频教程：https://www.bilibili.com/video/BV11e4y1n7BH?p=11
+
+
+
 
