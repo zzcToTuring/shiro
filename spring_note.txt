@@ -2,13 +2,47 @@ springboot版
 
 1、搭建框架
     pom.xml文件、项目配置、application.yml，mybatis-plus等内容配置完成
+    (在进行后续操作时，一定要确保此功能完善)
 
 2、userService创建方法->根据name查询用户
     public User getUserInfoByName(String name)
 
-3、完成myReal文件
-    其中包含自定义授权方法和自定义认证方法，均继承并实现相关接口
-    同时，要将其交由spring进行管控
+3、realm配置项
+    3-1 myReal
+        其中包含两项自定义设置：自定义授权方法(doGetAuthorizationInfo)、自定义登录方法(doGetAuthenticationInfo)
+        需要继承 AuthorizingRealm
 
-//检查数据库与其连接情况
-//查找设置未生效原因
+        自定义方法：返回new SimpleAuthenticationInfo 对象，其中规定相关认证方法
+
+    3-2 ShiroConfig：shiro相关配置
+        SecurityManager：基础配置，详情见代码
+
+        拦截器：在shiro的管控下，哪些文件能直接访问，哪些要登录后才能访问，在此文件中做配置
+
+4、controller层访问
+        创建login、main前端界面
+        在controller层做好相应跳转逻辑进行处理，同时，在拦截器中配置好哪些界面能访问，达到初始springboot项目shiro认证功能
+
+5、多个 realm 的认证策略设置
+        在项目3中，创建了myReal并放入ShiroConfig中；在实际的开发中，myReal可能存在多个，验证也可能存在多个规则
+        Shiro 中定义了 3 种认证策略的实现：
+            AtLeastOneSuccessfulStrategy 只要有一个（或更多）的 Realm 验证成功，那么认证将视为成功
+            FirstSuccessfulStrategy 第一个 Realm 验证成功，整体认证将视为成功，且后续 Realm 将被忽略
+            AllSuccessfulStrategy 所有 Realm 成功，认证才视为成功
+        举例(config)：
+            //创建 defaultWebSecurityManager 对象
+             DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+            //2 创建认证对象，并设置认证策略
+             ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+             modularRealmAuthenticator.setAuthenticationStrategy(new AllSuccessfulStrategy());
+             defaultWebSecurityManager.setAuthenticator(modularRealmAuthenticator);
+            //3 封装 myRealm 集合
+             List<Realm> list = new ArrayList<>();
+             list.add(myRealm);
+             list.add(myRealm2);
+            //4 将 myRealm 存入 defaultWebSecurityManager 对象
+              defaultWebSecurityManager.setRealms(list);
+            //5 返回
+              return defaultWebSecurityManager;
+
+
