@@ -45,4 +45,25 @@ springboot版
             //5 返回
               return defaultWebSecurityManager;
 
+6、rememberMe与登出
+    在项目中，经常会使用到记住登录状态或退出登录选项
 
+    6-1rememberMe：
+       --在ShiroConfig做好相关配置，添加rememberMe功能，同时设置好相关cookie
+       --添加拦截器 definition.addPathDefinition("/**","user"); 在添加时需注意其位置
+       --关于第二个参数的说明
+            anon:无需认证即可访问
+            authc:需要认证才可以访问
+            user:点击"记住我"功能可以访问
+            perms:拥有权限才能访问
+            role:拥有某个角色权限才能访问
+       --在controller层中添加参数，添加跳转方法，同时在界面上添加内容
+
+    6-2：登出
+        --页面上添加：<a href="/logout">登出</a>
+        --拦截器添加：definition.addPathDefinition("/logout","logout"); 同时，也需要注意其位置
+
+    注意点：
+        1、浏览器测试时不能使用无痕模式(不会保存cookie)，没有rememberMe效果
+        2、在addPathDefinition时，注意其位置，全局匹配的应该在最下方
+        (逻辑为从上到下找，找到符合条件的进行匹配)

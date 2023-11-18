@@ -13,3 +13,7 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 配置默认登录地址
+shiro:
+  loginUrl: /login
