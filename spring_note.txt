@@ -1,0 +1,14 @@
+springboot版
+
+1、搭建框架
+    pom.xml文件、项目配置、application.yml，mybatis-plus等内容配置完成
+
+2、userService创建方法->根据name查询用户
+    public User getUserInfoByName(String name)
+
+3、完成myReal文件
+    其中包含自定义授权方法和自定义认证方法，均继承并实现相关接口
+    同时，要将其交由spring进行管控
+
+//检查数据库与其连接情况
+//查找设置未生效原因
