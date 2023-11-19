@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
     <title>主页</title>
@@ -10,5 +10,10 @@
 登录用户为：<span th:text="${session.user}"></span>
 
 <a href="/logout">登出</a>
+
+<!--检验角色 admin-->
+<a shiro:hasRole="admin" href="/role1">admin专享</a>
+<!--检验权限 删除-->
+<a shiro:hasPermission="删" href="/role2">删除</a>
 </body>
 </html>

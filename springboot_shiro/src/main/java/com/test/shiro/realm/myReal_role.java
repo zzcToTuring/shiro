@@ -8,14 +8,19 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//@Component
-public class myReal extends AuthorizingRealm {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+@Component
+public class myReal_role extends AuthorizingRealm {
     @Autowired
     private UserService userService;
 
@@ -23,7 +28,18 @@ public class myReal extends AuthorizingRealm {
     //自定义授权方法
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        System.out.println("进入自定义授权方法");
+        //获取用户登录信息
+        String name=principalCollection.getPrimaryPrincipal().toString();
+        User user = userService.getUserInfoByName(name);
+        List<String> user_role= Arrays.asList(user.getRole().split(","));
+        List<String> user_p= Arrays.asList(user.getPermission().split(","));
+        //1 创建对象存储其权限与角色信息
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //2 存储角色
+        info.addRoles(user_role);
+        info.addStringPermissions(user_p);
+        return info;
     }
 
     //自定义登录认真方法
@@ -34,16 +50,12 @@ public class myReal extends AuthorizingRealm {
         //获取数据库中存储的信息
         User user = userService.getUserInfoByName(name);
 
+
         //判断，并对其进行封装
         if (user!=null){
             AuthenticationInfo info = new SimpleAuthenticationInfo(
-                    //用户输入-用户名
                     Token.getPrincipal(),
-                    //真实-密码user.getPwd(),
                     user.getPwd(),
-                    //如果加盐加密，其中需要添加加盐字段
-                    //ByteSource.Util.bytes("salt"),
-                    //用户输入-密码(已加密)
                     Token.getCredentials().toString()
             );
             return info;

@@ -67,3 +67,87 @@ springboot版
         1、浏览器测试时不能使用无痕模式(不会保存cookie)，没有rememberMe效果
         2、在addPathDefinition时，注意其位置，全局匹配的应该在最下方
         (逻辑为从上到下找，找到符合条件的进行匹配)
+
+7、授权
+    用户登录后，需要验证是否具有指定角色指定权限。Shiro也提供了方便的工具进行判断。
+    这个工具就是Realm的doGetAuthorizationInfo方法进行判断。触发权限判断的有两种方式
+    （1） 在页面中通过shiro:****属性判断
+    （2） 在接口服务中通过注解@Requires****进行判断
+
+    后端接口常用注解
+        @RequiresAuthentication：验证用户是否登录，等同于方法subject.isAuthenticated
+        @RequiresUser：验证用户是否被记忆：登录认证成功或记忆subject.isAuthenticated()为true
+        @RequiresGuest：验证是否是游客的请求 此时subject.getPrincipal()为null
+        @RequiresRoles：验证subject是否有相应角色，有角色访问方法，没有则会抛出异常AuthorizationException
+        @RequiresPermissions：验证subject是否有相应权限，有权限访问方法，没有则会抛出异常AuthorizationException
+    操作：
+        1、根据后端注解，在controller中添加对应方法
+        2、前端可同时添加超链接
+        3、修改myReal(见myReal_role)
+            角色一般只有一个，权限能拥有许多，在处理的时候注意辨别
+
+8、异常处理
+    在完成操作7后，如果没有对应的权限和角色，会展示初始界面，并在控制台爆相关异常
+    此时可对异常进行捕获：PermissionsException中@ControllerAdvice注解，对异常进行处理
+
+9、前端处理
+    若角色没有相关权限，在前端界面不应该展示
+    9-1：配置 Thymeleaf 与 Shiro 的整合依赖
+    9-2：在shiroConfig中添加相关属性
+    9-3 前端页面配置(需要加上<html lang="en" xmlns:shiro="http://www.w3.org/1999/xhtml">)
+    9-4 常见标识(标识都是一对一对的，为了书写方便只展示一个)：
+        <shiro:guest>：用户没有身份验证时显示相应信息，即游客访问信息
+        <shiro:user>：用户已经身份验证/记住我登录后显示相应的信息
+
+        <shiro:authenticated>：用户已经身份验证通过，即 Subject.login 登录成功，不是记住我登录的
+        <shiro:notAuthenticated>：用户已经身份验证通过，即没有调用 Subject.login 进行登录，包括记住我自动登录的也属于未进行身份验证
+
+        <shiro:hasRole name="admin">：如果当前 Subject 有角色将显示 body 体内容
+        <shiro:lacksRole name="abc">：如果当前 Subject 没有角色将显示 body 体内容。
+        <shiro:hasAllRoles name="admin,user">：当前 Subject需同时拥有角色 才能显示body内容
+        <shiro:hasAnyRoles name="admin,user">：如果当前 Subject 有任意一个角色（或的关系）将显示 body 体内容
+
+        <shiro:hasPermission name="xxx">：如果当前 Subject 有权限将显示 body 体内容
+        <shiro:lacksPermission name="xxx">：如果当前subject没有指定权限，将会显示body内容
+
+        <shiro:hasAllPermissions name="xxx,xxx">：当前 Subject需同时拥有权限，才能显示body内容
+        <shiro:hasAnyPermission name="xxx,xxx">：如果当前 Subject 有任意一个权限将显示 body 体内容
+        <shiro:principal property="xxx">：相当于subject.getPrincipals().getXxx
+
+10 完结&文件说明
+    讲述shiro框架入门及与springboot结合基础内容
+    主要包括：
+        1、在无框架模式使用
+            --认识shiro框架
+            --入门案例，创建shiroManager
+            --角色、权限分配
+            --加密
+            --自定义realm(讲述较少，详情见springboot版)
+        2、在springboot框架中使用
+            --项目搭建(pom.xml文件、项目配置、application.yml，mybatis-plus等内容配置完成)
+            --springboot部分：userService创建方法(方便从数据库中查询相关信息)
+            --初始化shiro
+                创建real配置：myReal,shiroConfig
+                controller访问：mainController
+                index.html页面
+        3、多个 realm 的认证策略设置
+
+        4、rememberMe 与 登出：
+            --shiroConfig配置：
+                ShiroConfig_cook设置rememberMe启用、cookie设置、拦截器设置
+            --index页面、controller同时做相关修改
+            --登出只需在拦截器中做相应配置即可
+
+        5、角色授权、权限设置
+            controller设置:在后端哪些方法不仅仅登录，还要权限：mainController_role
+            PermissionsException设置：没权限跳转页面不友好，同时控制台报错，若用户没权限/认证失败展示相应内容
+            myReal修改：增加权限/角色认证：myReal_role(注意其格式和要求参数)
+            前端页面：
+                若角色没有权限，在前端页面不应该展示，使用thymeleaf框架进行展示/隐藏处理
+                (详情见index文件/note)
+
+
+
+
+
+

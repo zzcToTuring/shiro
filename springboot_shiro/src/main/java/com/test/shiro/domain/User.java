@@ -14,6 +14,8 @@ public class User {
     private String name;
     private String pwd;
     private Integer rid;
+    private String role;
+    private String permission;
 
     public Integer getId() {
         return id;
@@ -47,14 +49,32 @@ public class User {
         this.rid = rid;
     }
 
-    public User() {
+    public String getRole() {
+        return role;
     }
 
-    public User(Integer id, String name, String pwd, Integer rid) {
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public User(Integer id, String name, String pwd, Integer rid, String role, String permission) {
         this.id = id;
         this.name = name;
         this.pwd = pwd;
         this.rid = rid;
+        this.role = role;
+        this.permission = permission;
+    }
+
+    public User() {
     }
 
     @Override
@@ -64,6 +84,8 @@ public class User {
                 ", name='" + name + '\'' +
                 ", pwd='" + pwd + '\'' +
                 ", rid=" + rid +
+                ", role='" + role + '\'' +
+                ", permission='" + permission + '\'' +
                 '}';
     }
 }

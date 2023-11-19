@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:shiro="">
 <head>
     <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
     <title>登录</title>
@@ -7,6 +7,9 @@
 <body>
 <h1>Shiro 登录认证</h1>
 <br>
+<shiro:guest>
+    guest：未登录....请进行登录
+</shiro:guest>
 <form action="/login/userLogin">
     <div>用户名：<input type="text" name="name" value=""></div>
     <div>密码：<input type="password" name="pwd" value=""></div>
