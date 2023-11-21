@@ -2,23 +2,23 @@
 了解学习 shiro 权限控制 相关内容，主要内容有：
 
 ### 在无框架模式使用
-+认识shiro框架
++ 认识shiro框架
 
-+入门案例，创建shiroManager
++ 入门案例，创建shiroManager
 
-+角色、权限分配
++ 角色、权限分配
 
-+加密
++ 加密
 
-+自定义realm(讲述较少，详情见springboot版)
++ 自定义realm(讲述较少，详情见springboot版)
 
 ### 在springboot框架中使用
 
-+项目搭建(pom.xml文件、项目配置、application.yml，mybatis-plus等内容配置完成)
++ 项目搭建(pom.xml文件、项目配置、application.yml，mybatis-plus等内容配置完成)
 
-+springboot部分：userService创建方法(方便从数据库中查询相关信息)
++ springboot部分：userService创建方法(方便从数据库中查询相关信息)
 
-+初始化shiro
++ 初始化shiro
 
 创建real配置：myReal,shiroConfig
 
